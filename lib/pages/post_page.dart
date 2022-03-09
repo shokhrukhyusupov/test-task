@@ -5,9 +5,17 @@ import '../bloc/comment_bloc/comment_bloc.dart';
 import '../bloc/comment_bloc/comment_state.dart';
 import '../models/posts.dart';
 
-class PostPage extends StatelessWidget {
+class PostPage extends StatefulWidget {
   final Posts post;
   const PostPage({Key? key, required this.post}) : super(key: key);
+
+  @override
+  State<PostPage> createState() => _PostPageState();
+}
+
+class _PostPageState extends State<PostPage> {
+  TextEditingController controllerOne = TextEditingController();
+  TextEditingController controllerTwo = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +28,7 @@ class PostPage extends StatelessWidget {
         ),
         actions: [
           TextButton(
-            onPressed: () => showBottomSheet(context),
+            onPressed: () => showBottomSheet(context, widget.post.id),
             child: Text(
               'Add Comment',
               style: const TextStyle(fontSize: 16, color: Colors.blueAccent),
@@ -46,12 +54,12 @@ class PostPage extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    post.title,
+                    widget.post.title,
                     style: const TextStyle(color: Colors.white, fontSize: 20),
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                   Text(
-                    post.body,
+                    widget.post.body,
                     style: const TextStyle(color: Colors.white60, fontSize: 16),
                   ),
                 ],
@@ -85,7 +93,7 @@ class PostPage extends StatelessWidget {
     );
   }
 
-  showBottomSheet(BuildContext context) {
+  showBottomSheet(BuildContext context, int id) {
     GlobalKey<FormState> formKey = GlobalKey<FormState>();
     showModalBottomSheet(
       context: context,
@@ -100,24 +108,23 @@ class PostPage extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextFormField(
-                  validator: validate,
-                  onSaved: (value) => ,
+                  controller: controllerOne,
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
-                  validator: validate,
-                  onSaved: (value) => ,
+                  controller: controllerTwo,
                 ),
                 const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      formKey.currentState!.save();
-                      BlocProvider.of<CommentBloc>(context).postComment(body)
-                      Navigator.pop(context);
-                    }
+                    BlocProvider.of<CommentBloc>(context).postComment(
+                        id, controllerOne.text, controllerTwo.text);
+                    controllerOne.clear();
+                    controllerTwo.clear();
+                    setState(() {});
+                    Navigator.pop(context);
                   },
-                  child: const Text('Add'),
+                  child: const Text('Send'),
                 ),
               ],
             ),
@@ -125,13 +132,5 @@ class PostPage extends StatelessWidget {
         );
       },
     );
-  }
-
-  String? validate(text) {
-    if (text != null) {
-      return null;
-    } else {
-      return 'the field cannot be empty';
-    }
   }
 }
