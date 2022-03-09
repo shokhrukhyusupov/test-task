@@ -1,11 +1,11 @@
-import '../models/user.dart';
+import '../../models/users.dart';
 
 abstract class UserState {}
 
 class UserLoadingState extends UserState {}
 
 class UserLoadedState extends UserState {
-  final List<User> users;
+  final List<Users> users;
 
   UserLoadedState({this.users = const []});
 }
