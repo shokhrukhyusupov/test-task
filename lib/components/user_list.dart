@@ -14,6 +14,12 @@ class UserList extends StatefulWidget {
 class _UserListState extends State<UserList> {
   int isTapped = 0;
   @override
+  void initState() {
+    BlocProvider.of<PostBloc>(context).loadPost(1, 0);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<UserBloc, UserState>(builder: (context, state) {
       if (state is UserLoadedState) {

@@ -7,7 +7,7 @@ class CommentLoadingState extends CommentState {}
 class CommentLoadedState extends CommentState {
   final List<Comments> comments;
 
-  CommentLoadedState({required this.comments});
+  CommentLoadedState({this.comments = const []});
 }
 
 class CommentLoadFailed extends CommentState {

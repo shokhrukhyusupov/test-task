@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:junior_task/bloc/user_bloc/user_bloc.dart';
-import 'package:junior_task/bloc/user_bloc/user_state.dart';
 import 'package:junior_task/components/post_list.dart';
 import 'package:junior_task/components/user_list.dart';
 

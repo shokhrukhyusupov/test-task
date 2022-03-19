@@ -1,6 +1,6 @@
 class Comments {
-  final int postId;
-  final int id;
+  final dynamic postId;
+  final dynamic id;
   final String name;
   final String email;
   final String body;

@@ -17,16 +17,13 @@ class CommentsService {
   }
 
   Future<Comments> postComments(int id, String name, String text) async {
-    try {
-      final response = await http.post(
-        Uri.parse(url + '/posts/$id/comments'),
-        body: jsonEncode({'name': name, 'body': text, 'email': 'random@gmail.com'}),
-        headers: {'Content-type': 'application/json; charset=UTF-8'},
-      );
-      final data =  jsonDecode(response.body);
-      return Comments.fromJson(data);
-    } catch (e) {
-      throw Exception(e);
-    }
+    final String json = jsonEncode({'name': name, 'body': text, 'email': 'random@gmail.com'});
+    final response = await http.post(
+      Uri.parse(url + '/posts/$id/comments'),
+      body: utf8.encode(json),
+      headers: {'Content-type': 'application/json; charset=UTF-8'},
+    );
+    final data = jsonDecode(response.body);
+    return Comments.fromJson(data);
   }
 }

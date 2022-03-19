@@ -97,6 +97,7 @@ class _PostPageState extends State<PostPage> {
     GlobalKey<FormState> formKey = GlobalKey<FormState>();
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       builder: (_) {
         return Form(
           key: formKey,
@@ -108,21 +109,30 @@ class _PostPageState extends State<PostPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextFormField(
+                  validator: (text) => text == '' ? 'Введите текст' : null,
                   controller: controllerOne,
+                  decoration: const InputDecoration(
+                    hintText: 'comment'
+                  ),
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
+                  validator: (text) => text == '' ? 'Введите текст' : null,
+                  decoration: const InputDecoration(
+                    hintText: 'email'
+                  ),
                   controller: controllerTwo,
                 ),
                 const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () {
-                    BlocProvider.of<CommentBloc>(context).postComment(
-                        id, controllerOne.text, controllerTwo.text);
-                    controllerOne.clear();
-                    controllerTwo.clear();
-                    setState(() {});
-                    Navigator.pop(context);
+                    if (formKey.currentState!.validate()) {
+                      BlocProvider.of<CommentBloc>(context).postComment(
+                          id, controllerOne.text, controllerTwo.text);
+                      controllerOne.clear();
+                      controllerTwo.clear();
+                      setState(() {});
+                    }
                   },
                   child: const Text('Send'),
                 ),
