@@ -14,8 +14,9 @@ class PostPage extends StatefulWidget {
 }
 
 class _PostPageState extends State<PostPage> {
-  TextEditingController controllerOne = TextEditingController();
-  TextEditingController controllerTwo = TextEditingController();
+  TextEditingController titleFormController = TextEditingController();
+  TextEditingController bodyFormController = TextEditingController();
+  TextEditingController emailFormController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,29 +109,137 @@ class _PostPageState extends State<PostPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TextFormField(
-                  validator: (text) => text == '' ? 'Введите текст' : null,
-                  controller: controllerOne,
-                  decoration: const InputDecoration(
-                    hintText: 'comment'
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: TextFormField(
+                    autofocus: true,
+                    validator: (text) => text == '' ? 'Введите текст' : null,
+                    controller: titleFormController,
+                    decoration: InputDecoration(
+                      hintText: 'Enter title',
+                      labelText: 'Title',
+                      filled: true,
+                      fillColor: Colors.grey.withOpacity(0.1),
+                      border: titleFormController.text.isEmpty
+                          ? OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(30),
+                            )
+                          : OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Colors.blueGrey, width: 2),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            const BorderSide(color: Colors.blue, width: 2),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide:
+                            const BorderSide(color: Colors.red, width: 1),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                TextFormField(
-                  validator: (text) => text == '' ? 'Введите текст' : null,
-                  decoration: const InputDecoration(
-                    hintText: 'email'
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: TextFormField(
+                    validator: (body) {
+                      if (body == '') {
+                        return 'заполните это поле';
+                      } else if (body!.length < 15) {
+                        return 'Это поле должно быть заполнено (не менее 15 символов)';
+                      } else {
+                        return null;
+                      }
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Enter body',
+                      labelText: 'Body',
+                      filled: true,
+                      fillColor: Colors.grey.withOpacity(0.1),
+                      border: bodyFormController.text.isEmpty
+                          ? OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(30),
+                            )
+                          : OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Colors.blueGrey, width: 2),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            const BorderSide(color: Colors.blue, width: 2),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide:
+                            const BorderSide(color: Colors.red, width: 1),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    controller: bodyFormController,
                   ),
-                  controller: controllerTwo,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: TextFormField(
+                    validator: (email) {
+                      if (email == '') {
+                        return 'Введите эмайл';
+                      } else if (RegExp(
+                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                          .hasMatch(email!)) {
+                        return null;
+                      } else {
+                        return 'Введите правильно емаил';
+                      }
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Enter email',
+                      labelText: 'Email',
+                      labelStyle: const TextStyle(color: Colors.blueGrey),
+                      filled: true,
+                      fillColor: Colors.grey.withOpacity(0.1),
+                      border: emailFormController.text.isEmpty
+                          ? OutlineInputBorder(
+                              borderSide: BorderSide.none,
+                              borderRadius: BorderRadius.circular(30),
+                            )
+                          : OutlineInputBorder(
+                              borderSide: const BorderSide(
+                                  color: Colors.blueGrey, width: 2),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide:
+                            const BorderSide(color: Colors.blue, width: 2),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide:
+                            const BorderSide(color: Colors.red, width: 1),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    controller: emailFormController,
+                  ),
                 ),
                 const SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
                       BlocProvider.of<CommentBloc>(context).postComment(
-                          id, controllerOne.text, controllerTwo.text);
-                      controllerOne.clear();
-                      controllerTwo.clear();
+                          id,
+                          titleFormController.text,
+                          bodyFormController.text,
+                          emailFormController.text);
+                      titleFormController.clear();
+                      bodyFormController.clear();
+                      emailFormController.clear();
                       setState(() {});
                     }
                   },

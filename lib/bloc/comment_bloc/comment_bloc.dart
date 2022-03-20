@@ -21,11 +21,11 @@ class CommentBloc extends Cubit<CommentState> {
     }
   }
 
-  postComment(int id, String text, String email) async {
+  postComment(int id, String title, String body, String email) async {
     try {
       final comments = await commentsService.getComments(id);
       final Comments comment =
-          await commentsService.postComments(id, text, email);
+          await commentsService.postComments(id, title, body, email);
       final allComments = [comment, ...comments];
       emit(CommentLoadedState(comments: allComments));
     } catch (e) {

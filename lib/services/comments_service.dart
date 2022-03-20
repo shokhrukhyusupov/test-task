@@ -16,8 +16,8 @@ class CommentsService {
     }
   }
 
-  Future<Comments> postComments(int id, String name, String text) async {
-    final String json = jsonEncode({'name': name, 'body': text, 'email': 'random@gmail.com'});
+  Future<Comments> postComments(int id, String title, String body, String email) async {
+    final String json = jsonEncode({'name': title, 'body': body, 'email': email});
     final response = await http.post(
       Uri.parse(url + '/posts/$id/comments'),
       body: utf8.encode(json),
